@@ -9,8 +9,9 @@ test.describe("Settings", () => {
     const dialog = page.getByRole("dialog");
     await dialog.getByLabel("Name").fill(name);
     await dialog.getByLabel("Description").fill("Owns the design system and the brand guide.");
+    const created = page.waitForResponse((r) => r.url().endsWith("/api/groups.create"));
     await dialog.getByRole("button", { name: "Continue" }).click();
-    await expect(dialog.getByText(/add people/i).first()).toBeVisible();
+    expect((await created).ok()).toBe(true);
     await page.keyboard.press("Escape");
 
     await page.reload();
